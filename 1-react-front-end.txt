@@ -186,6 +186,110 @@ Next, we will see how to create routes to render other pages of our site.
 
 4. Adding React Router to an application
 =========================================
+The next task is creating other pages and displaying them when visiting specific router/urls.
+We need logic to determine the current url before rendering the appropriate page/component.
+There is a package that does this called "React Router DOM".
+NOTE: The instructor is using version 6.4 of React Router DOM
+      use "npm install react-router-dom@6.4" to mirror instructor
+
+  front-end/$ npm install react-router-dom@6.4
+
+  (or current) front-end/$ npm install react-router-dom
+
+
+With React Router DOM installed, lets modify "App.jsx" to create a Browser Router.
+Import "createBrowserRouter" and "RouterProvider".
+Then create a routes array of objects where each object consists of a "path" & "element" property.
+Then create a browser router by passing the routes array to "createBrowserRouter()".
+Finally we can pass the results to the "router" prop of <RouterProvider>.
+
+[front-end/src/App.jsx]
+    import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+    import HomePage from './pages/HomePage.jsx';
+    
+    const routes = [
+      {
+        path: '/',
+        element: <HomePage />,
+      }
+    ];
+    
+    const router = createBrowserRouter(routes);
+    
+    function App(){
+      return (
+        <RouterProvider router={router} />
+      );
+    }
+    
+    export default App;
+
+
+
+Now if you start up the server and view the app at "http://localhost:5173/" it will display a similar results as before when the <HomePage> component was the only value returned by App.
+The difference is when attempting to view an unknown route such as "http://localhost:5173/about".
+You will get an error page, "Unexpected Application Error! 404 Not Found".
+
+Before dealing with the 404 error, lets try building some other pages and add routes for them.
+You can use the same template we used for the "HomePage" component by copying and pasting them into new components and modifying them with the appropriate function name and text.
+
+[src/pages/AboutPage.jsx]
+  export default function AboutPage() {
+  return <h1>This is the About Page!</h1>;
+}
+
+Do the same for other pages in src/pages:
+- ArticlesListPage.jsx
+- ArticlePage.jsx
+
+
+With the new pages, update "App.jsx" to import them and then add them to the array of routes.
+
+[App.jsx]
+    import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+    import './App.css';
+    import HomePage from './pages/HomePage.jsx';
+    import AboutPage from './pages/AboutPage.jsx';
+    import ArticlePage from './pages/ArticlePage.jsx';
+    import ArticlesListPage from './pages/ArticlesListPage.jsx';
+    
+    const routes = [
+      {
+        path: '/',
+        element: <HomePage />,
+      },
+      {
+        path: '/about/',
+        element: <AboutPage />,
+      },
+      {
+        path: '/articles',
+        element: <ArticlesListPage />
+      },
+      {
+        path: '/articles/individual',
+        element: <ArticlePage />
+      }
+    ];
+
+    const router = createBrowserRouter(routes);
+    
+    function App() {
+      return <RouterProvider router={router} />;
+    }
+    
+    export default App;
+
+
+Now lets test this out by going to the routes & pages we created.
+* http://localhost:5173/                     should show the HomePage
+* http://localhost:5173/about                should show the AboutPage
+* http://localhost:5173/articles             should show the ArticlesListPage
+* http://localhost:5173/articles/individual  should show the ArticlePage
+* http://localhost:5173/blah                 should throw an error 404 Not Found
+
+
+
 5. Using React Router links
 =========================================
 6. URL parameters with React Router
