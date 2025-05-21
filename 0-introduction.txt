@@ -4,3 +4,21 @@ Table of Contents
 ================================================
 1. Build your own full-stack website using React
 2. What you should know
+
+
+
+1. Build your own full-stack website using React
+================================================
+Imagine walking into a job interview with a working full-stack React app to demonstrate your skills. This may impress the interviewer and help you get the job.
+
+This course walks you step-by-step through creating and hosting a full-stack React app using MongoDB, Express, React, & Node. This is commonly known as the MERN stack.
+
+
+
+2. What you should know
+================================================
+You should be familiar with some basics:
+* JavaScript sytnax
+* Basics of React
+* Fundamental networking concepts
+  such as making network requests and client/server
