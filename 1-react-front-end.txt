@@ -11,3 +11,131 @@ Table of contents
 7. Creating and linking the articles list
 8. Creating a 404 page
 9. Adding styles
+
+
+
+
+1. Why React?
+=========================================
+The course starts off building the front-end using React.
+
+React website: https://react.dev
+
+You might wonder why you would use React over hand coding with HTML, CSS, and JavaScript.
+React makes development easy without losing fine grained control that comes with hand coding. With React you create modular reusable components that can be arranged into a fully functional website.
+
+Building a website can be done with limited to no development skills with tools such as:
+* Wordpress
+* Wix
+* SquareSpace
+
+If you are not a developer these tools are great solution for you.
+However, this course is focused on developers that want to learn the MERN stack.
+
+
+
+2. Setting up a React project
+=========================================
+The fastest way to setup a React app is with a generator, such as Vite.
+
+Vite website: https://vite.dev
+
+The instructor has his development environment setup using the following.
+Aside from Node you can easily pick and choose your tools/environment.
+- VSCode
+- Codespaces (a virtual environment)
+- Node
+
+NOTE: The instructor uses Vite version 5.5.2 and suggests you do the same.
+
+STEP 1
+Create a new folder for this course site/project, such as "fullstack-react-app".
+
+  fullstack-react/
+
+STEP 2
+In VSCode open an integrated terminal to your parent project directory.
+Then create a React app using Vite. Feel free to use Typescript if you want.
+
+Option 1 (using the same Vite version 5.4.2 as the instructor, you may get security warnings)
+
+  fullstack-react/$ npm create vite@5.5.2
+  Project name: front-end
+  Select a framework: React
+  Select a variant: JavaScript
+
+Option 2 (use the lastest version of Vite)
+
+  fullstack-react/$ npm create vite@latest
+  Project name: front-end
+  Select a framework: React
+  Select a variant: JavaScript 
+
+You will now see a new folder "front-end" is created and instructions are given to change to this directory than run a command to install dependencies.
+
+    fullstack-react/$ cd front-end
+    fullstack-react/front-end/$ npm install
+    ...added 196 packages...
+
+Once you have installed the dependencies you have basic React app and scaffold.
+
+    fullstack-react/
+      front-end/
+        public/
+        src/
+          assets/
+          App.css
+          App.jsx
+          index.css
+          main.jsx
+        index.html
+        package.json
+        .gitignore
+        README.md
+
+
+When you look inside "App.jsx" you will see the default React App component that Vite created.
+To see this in action you can start the development server from within the project folder.
+In this case our project folder is "front-end".
+Running "npm run dev" starts the server. Then you can open a browser to the provided url to see & interact with the React app.
+NOTE: This is running locally. If you are using Codespaces you will have to go to the "Ports" tab in the interactive terminal to get the remote address/url by clicking the globe icon next to the "forwarded address" column.
+
+    fullstack-react/front-end/$ npm run dev
+    Local: http://localhost:5173
+
+
+So if all went well you should see a simple page with 2 graphics (Vite and React) and a button to click to increment the count.
+
+Now, lets explain "Hot Module Reloading"(HMR). This is a feature to aid in development where your saved updates are reflected immediately in the running browser. 
+To see this in action:
+a. Look at the currently running app in the browser
+b. update and save "App.jsx" such changing some text like adding "Just did!".
+
+   ...
+     <p>
+       Edit <code>src/App.jsx</code> and save to test HMR. Just did!
+     </p>
+
+c. After saving this file go back to the browser
+   All your changes are immediately reflected
+
+
+That is it. A basic React app is ready for you start building the front end part of this course.
+NOTE: To stop the running server you can type CTRL + C
+ 
+
+
+3. Creating the home page
+=========================================
+4. Adding React Router to an application
+=========================================
+5. Using React Router links
+=========================================
+6. URL parameters with React Router
+=========================================
+7. Creating and linking the articles list
+=========================================
+8. Creating a 404 page
+=========================================
+9. Adding styles
+=========================================

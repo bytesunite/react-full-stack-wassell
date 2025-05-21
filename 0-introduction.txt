@@ -18,7 +18,7 @@ This course walks you step-by-step through creating and hosting a full-stack Rea
 2. What you should know
 ================================================
 You should be familiar with some basics:
-* JavaScript sytnax
+* JavaScript syntax
 * Basics of React
 * Fundamental networking concepts
   such as making network requests and client/server
