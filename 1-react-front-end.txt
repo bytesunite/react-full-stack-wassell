@@ -49,7 +49,7 @@ Aside from Node you can easily pick and choose your tools/environment.
 NOTE: The instructor uses Vite version 5.5.2 and suggests you do the same.
 
 STEP 1
-Create a new folder for this course site/project, such as "fullstack-react-app".
+Create a new folder for this course site/project, such as "fullstack-react-app" or "blog-website".
 
   fullstack-react/
 
@@ -59,27 +59,27 @@ Then create a React app using Vite. Feel free to use Typescript if you want.
 
 Option 1 (using the same Vite version 5.4.2 as the instructor, you may get security warnings)
 
-  fullstack-react/$ npm create vite@5.5.2
+  fullstack-react-app/$ npm create vite@5.5.2
   Project name: front-end
   Select a framework: React
   Select a variant: JavaScript
 
 Option 2 (use the lastest version of Vite)
 
-  fullstack-react/$ npm create vite@latest
+  fullstack-react-app/$ npm create vite@latest
   Project name: front-end
   Select a framework: React
   Select a variant: JavaScript 
 
 You will now see a new folder "front-end" is created and instructions are given to change to this directory than run a command to install dependencies.
 
-    fullstack-react/$ cd front-end
-    fullstack-react/front-end/$ npm install
+    fullstack-react-app/$ cd front-end
+    fullstack-react-app/front-end/$ npm install
     ...added 196 packages...
 
 Once you have installed the dependencies you have basic React app and scaffold.
 
-    fullstack-react/
+    fullstack-react-app/
       front-end/
         public/
         src/
@@ -100,7 +100,7 @@ In this case our project folder is "front-end".
 Running "npm run dev" starts the server. Then you can open a browser to the provided url to see & interact with the React app.
 NOTE: This is running locally. If you are using Codespaces you will have to go to the "Ports" tab in the interactive terminal to get the remote address/url by clicking the globe icon next to the "forwarded address" column.
 
-    fullstack-react/front-end/$ npm run dev
+    fullstack-react-app/front-end/$ npm run dev
     Local: http://localhost:5173
 
 
@@ -127,6 +127,63 @@ NOTE: To stop the running server you can type CTRL + C
 
 3. Creating the home page
 =========================================
+With a new React app created, the next step is to create some pages for our blog app.
+
+STEP 1
+Create a new folder "pages" to help organize our app pages.
+
+  front-end/
+    src/
+      /pages
+
+
+STEP 2
+Create a new "HomePage" component for the homepage.
+
+[src/pages/HomePage.jsx]
+  export default function HomePage(){
+    return (
+      <h1>This is the Home Page!</h1>
+    );
+  }
+
+
+STEP 3
+Update "App.jsx" to render the new "HomePage" component when our React app is rendered in the browser.
+
+[front-end/src/App.jsx]
+  import './App.css';
+  import HomePage from './pages/HomePage.jsx';
+
+  function App(){
+    return (
+      <HomePage />
+    )
+  }
+
+  export default App;
+
+
+
+If all went well you should now see the HomePage rendered when viewing your React app in the browser
+
+BROWSER: http://localhost:5173/
+
+  This is the Home Page!
+
+
+Notice however that "This is the Home Page!" is displayed for every url/route we go to.
+
+BROWSER: http://localhost:5173/blah
+
+  This is the Home Page!
+
+
+This doesn't seem right, does it. We don't have any other pages yet so what is going on? 
+Next, we will see how to create routes to render other pages of our site. 
+
+
+
 4. Adding React Router to an application
 =========================================
 5. Using React Router links
