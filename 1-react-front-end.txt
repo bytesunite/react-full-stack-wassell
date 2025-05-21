@@ -1,0 +1,13 @@
+Chapter 1 - Creating a React Front-End
+
+Table of contents
+=================================
+1. Why React?
+2. Setting up a React project
+3. Creating the home page
+4. Adding React Router to an application
+5. Using React Router links
+6. URL parameters with React Router
+7. Creating and linking the articles list
+8. Creating a 404 page
+9. Adding styles

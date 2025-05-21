@@ -1,0 +1,9 @@
+Chapter 6 - Hosting a Full-Stack React Application
+
+Table of Contents
+================================
+1. Preparing an app for release
+2. Setting up hosting for MongoDB
+3. Defining environment variables
+4. Deploying a full-stack application
+5. Shutting down a Google Cloud project

@@ -1,0 +1,11 @@
+Chapter 4 - Connecting the Front-End and Back-End
+
+Table of Contents
+==================================
+1. The Axios library
+2. Loading data for React Router routes
+3. Using the useLoaderData hook
+4. Using route parameters in loaders
+5. Displaying comments
+6. Creating an upvote button
+7. Creating an add comment form

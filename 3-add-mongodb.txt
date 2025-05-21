@@ -1,0 +1,9 @@
+Chapter 3 - Adding MongoDB to Node.js
+
+Table of Contents
+============================
+1. Why MongoDB?
+2. Downloading and installing MongoDB
+3. Adding MongoDB to Express
+4. Rewriting the upvote endpoint
+5. Rewriting the comments endpoint

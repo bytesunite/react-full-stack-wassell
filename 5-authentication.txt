@@ -1,0 +1,15 @@
+Chapter 5 - Adding User Authentication with Firebase Auth
+
+Table of Contents
+====================================
+1. Why Firebase Auth?
+2. Creating a Firebase project
+3. Adding Firebase Auth to React
+4. Build a login form
+5. Build a create account page
+6. Making interface adjustments for authenticated users
+7. Creating a custom auth hook
+8. Adding Firebase Auth to Node.js
+9. Protecting endpoints using auth tokens
+10. Protecting the upvote and comment endpoints
+11. Making requests with auth tokens
