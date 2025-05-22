@@ -1,3 +1,7 @@
+import { useParams } from 'react-router-dom';
+
 export default function ArticlePage() {
-  return <h1>This is the Article Page!</h1>;
+  const { name } = useParams();
+
+  return <h1>This is the {name} article</h1>;
 }
