@@ -186,7 +186,7 @@ Next, we will see how to create routes to render other pages of our site.
 
 4. Adding React Router to an application
 =========================================
-The next task is creating other pages and displaying them when visiting specific router/urls.
+The next task is creating other pages and displaying them when visiting specific routes/urls.
 We need logic to determine the current url before rendering the appropriate page/component.
 There is a package that does this called "React Router DOM".
 NOTE: The instructor is using version 6.4 of React Router DOM
@@ -292,6 +292,126 @@ Now lets test this out by going to the routes & pages we created.
 
 5. Using React Router links
 =========================================
+Instead of typing urls in the browser lets create a NavBar. The NavBar will be displayed on every page, letting us navigate to other pages.
+
+Using 'react-router-dom' we take advantage of the "Link" component. This component has a "to" prop that accepts the URL/path to a page.
+You might wonder why a standard anchor tag <a> wouldn't work here. Using <a> would send a new request to the server. Using <Link> will not make a new server request and instead supports React's single page application convention. In a single page application a single page is updated to prevent needless requests to the server and increase speed/perfomance.
+
+[src/Navbar.jsx]
+    import { Link } from 'react-router-dom';
+
+    export default function NavBar(){
+      return (
+        <nav>
+          <ul>
+            <li>
+              <Link to='/'>Home</Link>
+            </li>
+            <li>
+              <Link to='/about'>About</Link>
+            </li>
+            <li>
+              <Link to='/articles'>Articles</Link>
+            </li>
+          </ul>
+        </nav>
+      )
+    }
+
+
+With the basic NavBar created we could import this component into each page, but this would be redundant.
+  
+  import NavBar from ...                   import NavBar from...
+  function HomePage(){                     function AboutPage(){
+    return (                                 return (
+      <>                                       <>
+        <NavBar />                             <NavBar />
+        <h1>This is the Home Page!</h1>        <h1>This is the About Page!</h1>
+      </>                                      </>
+    )                                         )
+  }                                          }
+
+  ... and so on
+
+Instead, it would be better to create a layout/template that each page can use for elements that remain the same, such as a header/navigation bar/footer/ etc.
+
+You might think you could simply import the NavBar into "App.jsx" and place it above the <RouterProvider> like this, but it won't work:
+
+// This will NOT work
+[App.jsx]
+   ...
+   return (
+    <>
+      <NavBar />
+      <RouterProvider router={router} />
+    </>
+   )
+
+
+Nothing will be rendered in this case. If you use the browser dev tools you will see Errors such as:
+
+    Uncaught Error: useHref() may be used only in the context of a <Router> component".
+
+
+The reason is you can NOT use a <Link> component outside of a <RouterProvider> component.
+
+One way to address this is to create a component for a layout. Then we can use the <Outlet> component from 'react-router-dom' to specify a region where each page content for each route will go.
+NOTE: It does not need to be called Layout.
+
+[src/Layout.jsx]
+    import { Outlet } from 'react-router-dom';
+    import Navbar from './NavBar.jsx';
+
+    export default function Layout(){
+      return (
+        <>
+          <NavBar />
+          <Outlet />
+        </>
+      )
+    }
+
+
+So how this works is we will modify the routes in "App.jsx" to point to this Layout component, then place all our existing routes in a new property named "children".
+What this does is render <Layout> for every route (which includes NavBar & Outlet) and then the "children" prop will populate the <Outlet> portion of Layout with the element specififed for each specific route.
+
+[App.jsx]
+    ...
+    import Layout from './Layout.jsx';
+    ...
+    const routes = [{
+      path: '/',
+      element: <Layout />,
+      children: [
+        {
+          path: '/',
+          element: <HomePage />
+        }, {
+          path: '/about',
+          element: <AboutPage />
+        }, {
+          path: '/articles',
+          element: <ArticlesPage />
+        }
+      ],
+    }];
+
+    const router = createBrowserRouter(routes);
+
+    return (
+      <RouterProvider router={router}
+    )
+
+
+If all went well you should see the NavBar on each page, when you click a link it should display the individual pages (HomePage, AboutPage, ArticlesListPage)
+Any unknown route will still display the Uncaught 404, which is dealt with in a later lesson.
+
+REMINDER: an anchor tag <a> will make a request to the server and reload the page
+  <Link> uses JavaScript behind the scenes to update the current page.
+
+
+
+
 6. URL parameters with React Router
 =========================================
 7. Creating and linking the articles list
