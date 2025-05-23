@@ -603,5 +603,149 @@ The "/articles" route will work the same way as before but by refactoring our co
 
 8. Creating a 404 page
 =========================================
+Currently our app has 4 pages (HomePage, AboutPage, ArticlesListPage, ArticlePage) but it does NOT catch invalid urls. So when you go to an unknown/invalid route/url you get a unattractive Error page:
+
+    Unhandled Thown Error!
+
+    404 Not Found
+
+    Hey Developer
+
+    You can provide a way better UX that this when you app throws errors
+    by providing your own "errorElement" props in <Route>
+
+
+The task is to create a 404 page that will be displayed when it does not match any existing route.
+
+It is pretty simple, all you need to do is add a "errorElement" property to your existing routes in "App.jsx" and point it to an element of your choosing.
+
+[src/App.jsx]
+    ...
+    const routes = [
+    {
+      path: '/',
+      element: <Layout />,
+      errorElement: <h1>Oh No!</h1>,
+      children: [
+      {
+        path: '/',
+        element: <HomePage />,
+      },
+      {
+        path: '/about/',
+        element: <AboutPage />,
+      },
+    ...
+
+
+If you go to an invalid/unkown route the page will display a large header saying "Oh No!".  The instructor is kind of funny, but it is to illustrate how easy it is. Next, a 404 component is created to replace this <h1>.
+
+[src/pages/NotFoundPage.jsx]
+    export default function NotFoundPage(){
+      return (
+        <>
+          <h1>Page Not Found</h1>
+          <p>The link you followed to get here must be broken...</p>
+      );
+    }
+
+
+Then we can update App.jsx
+
+ [src/App.jsx]
+    ...
+    const routes = [
+    {
+      path: '/',
+      element: <Layout />,
+      errorElement: <h1>Oh No!</h1>,
+      children: [
+      {
+        path: '/',
+        element: <HomePage />,
+      },
+      {
+        path: '/about/',
+        element: <AboutPage />,
+      },
+    ...
+
+
+So go ahead and test it out by going to some invalid/unknown routes.
+You should see the new PageNotFound rendered.
+
+EX: http://localhost:5173/articles/123
+EX: http://localhost:5173/articles/blah/123
+
+BROWSER: 
+  Page Not Found
+  The link you followed to get here must be broken...
+
+
+So the "errorElement" property will render whenever an error occurs.
+We do not always want to handle errors this way but for our purposes the instructor will stop here and not go into details.
+
+However, if you look in the console our app is throwing a TypeError.
+It is complaining about a TypeError. The instructor mentions the error helps trigger the "errorElement" to display the "PageNotFound" page but he does not explain how to handle the TypeError in the console.
+
+BUG: The course fails to catch/address one error displayed in the
+     browser console when going to an invalid route
+
+     http://localhost:5173/articles/learn
+
+  BROWSER CONSOLE:
+    The above error occured in the <ArticlePage> component.
+    React will try to recreate this component tree from scratch using
+    the error boundry you provided, RenderErrorBoundary.
+
+    React Router caught the following error during render TypeError:
+    Cannot read properties of undefined (reading 'title') at
+    ArticlePage (ArticlePage.jsx:10:20)
+
+MY SOLUTION 1:
+One solution is to do a little error checking and display feedback 
+rather than an error page:
+
+    import { useParams } from 'react-router-dom';
+    import articles from '../article-content.js';
+    
+    export default function ArticlePage() {
+      const { name } = useParams();
+    
+      const article = articles.find((a) => a.name === name);
+      const title = article ? article.title : `Article "${name}" Not Found!`;
+    
+      return (
+        <>
+          <h3>{title}</h3>
+          {article && article.content.map((p) => <p key={p}>{p}</p>)}
+        </>
+      );
+    }
+
+
+MY SOLUTION 2:
+Another solution might be to redirect to an error page it no match is found, 
+thus eliminating the browser console error.
+
+    import { useParams, Navigate } from 'react-router-dom';
+    import articles from '../article-content.js';
+    
+    export default function ArticlePage() {
+      const { name } = useParams();
+    
+      const article = articles.find((a) => a.name === name);
+      const redirectPage = <Navigate to='/404' replace />;
+    
+      return (
+        <>
+          {article ? <h3>{article.title}</h3> : redirectPage}
+          {article && article.content.map((p) => <p key={p}>{p}</p>)}
+        </>
+      );
+    }
+
+
+
 9. Adding styles
 =========================================

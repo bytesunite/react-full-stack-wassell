@@ -4,12 +4,14 @@ import HomePage from './pages/HomePage.jsx';
 import AboutPage from './pages/AboutPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import ArticlesListPage from './pages/ArticlesListPage.jsx';
+import PageNotFound from './pages/PageNotFound.jsx';
 import Layout from './Layout.jsx';
 
 const routes = [
   {
     path: '/',
     element: <Layout />,
+    errorElement: <PageNotFound />,
     children: [
       {
         path: '/',
