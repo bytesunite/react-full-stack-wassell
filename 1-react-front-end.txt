@@ -414,6 +414,118 @@ REMINDER: an anchor tag <a> will make a request to the server and reload the pag
 
 6. URL parameters with React Router
 =========================================
+This lesson shows how to access key/value pairs from a url, known as url/route parameter.
+This app is going to display individual Articles, and the url will start with "articles/" then end with the name of the individual article.
+
+First the route to display the Article component needs to be modified in "App.jsx", by specifying a colon after the route and a parameter name ":name";
+The name after the colon can be anything which is used to grab that part of the url.
+
+EX: 
+  Here 123 and hello will match our route "articles/:name"
+  where we can access the values via the "name" property
+  in our component with help of the useParams() hook.
+
+  /articles/123
+  /articles/hello   
+
+[App.jsx]
+  ...
+  routes = [{
+    ...
+    children: [{
+      ...
+    {
+      path: 'articles/:name',
+      element: <Article />
+    }
+    ],
+  }];
+
+  ...
+
+
+Currently we do not have a list of articles so let's create a static file of articles to use in the example. The instructor provides a file but you can create your own if you want, which is an array of objects with (name,title,content) properties. The "content" property is an array of strings for paragraphs.
+SOURCE FILE: https://github.com/shaunwa/react-blog/blob/master/src/pages/article-content.js
+
+[src/article-content.js]
+   const articles = [{
+    name: 'learn-react',
+    title: 'The Fastest Way to Learn React',
+    content: [
+      `Welcome! Today we're going to be talking about the fastest way to Learn React. We'll be discussing some topics such as lorem ipsum...`,
+      `More lorem ipsum dummy text...`,
+      `Even more lorem ipsum dummy text...`
+    ]
+    },
+    { ... }, ...
+   ];
+
+   
+Take a look at the "name" property for each article, this is often a short version of the title which some refer to as a "slug". 
+This "name" property is what we will use to identify each article and serve as the url parameter.
+
+Now that we have a list of articles lets circle back to see how we can gain access to the url parameter.
+The url parameter value can be retrieved with help of the useParams() hook from 'react-router-dom'. This will allow us to access anything in the path that we previously configured in our routes "/articles:name" which we identified with ":name". So a path "articles/blah" would be accessed via a property ":name"
+
+[src/pages/ArticlePage.jsx]
+    import { useParams } from 'react-router-dom';
+
+    const {name} = useParams();
+
+    export default function ArticlePage(){
+      return <h1>This is the {name} article</h1>
+    }
+
+
+So test your app. You should be able to type in various urls to see the url parameter being reflected in the ArticlePage render.
+NOTE: url parameters are returned as string values.
+      If you want to use a url parameter as a number you will have to convert it to a number.
+
+  EX: https://localhost:5173/articles/123
+      This is the 123 article
+  
+  EX: https://localhost:5173/articles/learn-react
+      This is the learn-react article
+
+
+
+Now lets use the static list of articles and match any matching article "name" to the url parameter. If it matches, display the article title & content in the ArticlePage component.
+
+[src/pages/ArticlePage.jsx]
+  import { useParams } from 'react-router-dom';
+  import articles from '../article-content.js';
+
+  export default function ArticlePage(){
+    const { name } = useParams();
+    const article = articles.find((a) => a.name === name);
+
+    return (
+      <>
+        <h3>{article.title}</h3>
+        {article.content.map(p => <p key={p}>{p}</p>)}
+      </>
+    );
+  }
+
+
+Results of 'http://localhost:5173/articles/learn-react
+is:
+  The Fastest Way to Learn React
+  Welcome! Today we're going to be talking about the fastest way to
+  learn React. We'll be discussing some topics such as proin congue
+  ligula id risus posuere...
+
+  Donec vel mauris...
+
+  Etiam nec lectus...
+
+
+However, if we provide a url parameter that does not match, the "Unhandled Thrown Errror" is displayed with a stack trace to help you track down the problem.
+NOTE: The instructor will deal with 404 Not Found in a later lesson.
+
+At this point we are still having to type in a url to display an individual article in the ArticlePage component. The ArticlesListPage is not displaying a list of valid articles yet. This will be addressed in the next lesson.
+
+
 7. Creating and linking the articles list
 =========================================
 8. Creating a 404 page
