@@ -558,6 +558,45 @@ Go ahead and test this. If all went well when you go to "http://localhost:5173/a
 
 Next we will refactor this example to make the articles list available to other pages.
 
+You may find you want to list some articles on another page. So by refactoring listing articles to its own component can help with this.
+Create a new component "ArticlesList.jsx" that will take in a prop named "articles" and then loop through it and render a h3 with the title and a short summary in a <p>.
+
+[src/ArticlesList.jsx]
+    import { Link } from 'react-router-dom';
+    
+    export default function ArticlesList({ articles }) {
+      return (
+        <>
+          {articles.map((a) => (
+            <Link key={a.name} to={'/articles/' + a.name}>
+              <h3>{a.title}</h3>
+              <p>{a.content[0].substring(0, 150)}</p>
+            </Link>
+          ))}
+        </>
+      );
+    }
+
+
+With this new component we can update the "ArticlesListPage" component.
+We can remove the { Link } import, and instead import "ArticlesList" and use this in place of our original map() call, passing our articles as a prop to "ArticlesList".
+
+[src/pages/ArticlesListPage.jsx]
+    import ArticlesList from '../ArticlesList.jsx';
+    import articles from '../article-content.js';
+    
+    export default function ArticlesListPage() {
+      return (
+        <>
+          <h1>Articles</h1>
+          <ArticlesList articles={articles} />
+        </>
+      );
+    }
+
+
+If all went well your app should function the same as it did before refactoring.
+The "/articles" route will work the same way as before but by refactoring our code we can list all or some of the articles on the HomePage, or any other page, if we wanted.
 
 
 
