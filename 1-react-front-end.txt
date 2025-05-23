@@ -528,6 +528,40 @@ At this point we are still having to type in a url to display an individual arti
 
 7. Creating and linking the articles list
 =========================================
+The next task is to display a list of articles on the ArticlesListPage. Clicking on an individual article with display the article in the ArticlePage component.
+
+To make the title and the 150 character description a clickable link, wrap them in a <Link> component, that we used earlier. Then for each article display the title in a <h3> and the description in a <p>.
+NOTE: Don't forget the "key" when using map(), which is a unique value for
+      each item to help React track any changes to the contents.
+
+[src/pages/ArticlesListPage.jsx]
+import { Link } from 'react-router-dom';
+import articles from '../article-content.js';
+
+export default function ArticlesListPage() {
+  return (
+    <>
+      <h1>Articles</h1>
+      {articles.map((a) => (
+        <Link key={a.name} to={'/articles/' + a.name}>
+          <h3>{a.title}</h3>
+          <p>{a.content[0].substring(0, 150)}</p>
+        </Link>
+      ))}
+    </>
+  );
+}
+
+
+Go ahead and test this. If all went well when you go to "http://localhost:5173/articles/" you should see a list of articles. Clicking on the header or text should display the individual article. To return to the articles list you can use the main navigation.
+
+
+Next we will refactor this example to make the articles list available to other pages.
+
+
+
+
+
 8. Creating a 404 page
 =========================================
 9. Adding styles
