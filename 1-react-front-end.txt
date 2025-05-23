@@ -749,3 +749,20 @@ thus eliminating the browser console error.
 
 9. Adding styles
 =========================================
+Finally the instructor introduces some CSS styles to pretty up the app.
+
+https://github.com/LinkedInLearning/react-creating-and-hosting-a-full-stack-site-5948186/blob/01_09_end/front-end/src/index.css
+
+
+To test your styles out using both dark/light themes in Chrome you can type the following in the URL then toggle on (light / dark / device). If you don't see this you can click on the "Theme" button.
+
+For example you may use a dark theme to give your eyes and monitor a break but want to see the "light" theme to match the instructor's video.
+
+In a React app the global styles typically go in the "index.css" file.
+The "App.css" styles are meant for the "App.jsx" component styles.
+
+By default Vite creates and imports "App.css" into "App.jsx" using the line:
+
+  import './App.css';
+  
+
