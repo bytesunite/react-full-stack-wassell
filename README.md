@@ -1,12 +1,12 @@
 # React: Creating and Hosting a Full-Stack Site
 
-Author: Shaun Wassell
+Author: [Shaun Wassell](https://github.com/shaunwa/)
 
 Release Date: 11/12/2024
 
 Platform: Linkedin Learning
 
-[Course Content](https://github.com/shaunwa/react-blog)
+[LinkedIn Learning React Creating and Hosting a Full Stack Site](https://www.linkedin.com/learning/react-creating-and-hosting-a-full-stack-site-24928483)
 
 ## Concepts you should know for the course
 
@@ -25,3 +25,15 @@ Platform: Linkedin Learning
 5. Adding User Authentication with Firebase Auth
 6. Hosting a Full-Stack React Application
 7. Conclusion
+
+## Start/End code for each lesson
+
+As you progress through the course you can find both starting code and ending code for each lesson. These are stored as "branches" in the LinkedIn Learning "react-creating-and-hosting-a-fullstack-site" repo.
+[React: Creating and Hosting a Fullstack Site](https://github.com/LinkedInLearning/react-creating-and-hosting-a-full-stack-site-5948186/branches)
+
+## Course Resources
+
+- [LinkedIn Learning GitHub course](https://github.com/LinkedInLearning/react-creating-and-hosting-a-full-stack-site-5948186)
+- [Start/End code](https://github.com/LinkedInLearning/react-creating-and-hosting-a-full-stack-site-5948186/branches/all)
+- [Shaun Wassell blog app](https://github.com/shaunwa/react-blog)
+- [Shaun Wassell](https://github.com/shaunwa/)
