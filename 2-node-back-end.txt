@@ -181,6 +181,172 @@ BROWSER: http://localhost:8000/hello
 
 3. Testing an Express server with Postman
 =========================================
+The instructor finds in his experience developing the backend and testing it before building the frontend is easier than building a front end to test the backend.
+He suggests using a tool called Postman:
+URL: https://www.postman.com/downloads
+
+After you download and install Postman on you computer, open the app and in the main page you should see a "Overview" tab with a + icon/tab. If you click the + it opens up an interface to make a request. It is possible to specify the request method (Get, Post, etc) and provide a URL. The "send" button will send the request to the server. You can use this to test the request,response.
+
+NOTE (outside of instruction)
+Currently Postman allows you to use it without an account but this may change.
+Every once in awhile it asks you to sign in or "continue without account".
+Signing up for crap is annoying/privacy issue, so hopefully free use continues.
+-- end NOTE --
+
+
+POSTMAN: interface
+
+  Overview | +  <---( click the + )
+  -------------
+  ...
+
+
+  Overview | Get Untitled Request
+  -------------------------------
+  Untitled Request
+  Get v | Enter URL or paste text
+
+  Params | Authorize
+  Query Params
+    Key              Value            Description
+
+  --------------------------------------------------
+  Response
+
+
+
+If all went well and you have Postman installed and ready to go let's test out simple Express server.
+NOTE: If you are using CodeSpaces you will need to go down to "Ports"/"Visibility" and toggle it to "public". If you using your own computer for your server, you don't need this step.
+
+First, make sure your Express server is running/listening.
+Second, open Postman and select GET, and type in a URL that matches our endpoint: "http://localhost:8000/hello"
+Third, press SEND in the Postman app to make the request.
+
+If all went well you will see a response "Hello" in Postman, along with other information such as the response code & status "200 OK", the est time it took, etc.:
+
+   ...
+   Body Cookies Headers Test Results        200 OK 26ms 232B
+   [Pretty] Raw Preview Visualize HTML
+   1 Hello!
+
+
+The helpful thing Postman can provide is the many methods that come builtin that we can easily use to test our server (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
+For example a POST request is typically used for creating data on the server.
+
+So right now our Express server has a single endpoint for a GET request to "/hello". So using Postman, send a "PUT" request to the same url. What you get is an ERROR page!
+
+POSTMAN:
+
+   POST  http://localhost:8000/hello
+
+  Body  ...                        404 Not Found 246ms
+  <!DOCTYPE html>
+  ...
+    Cannot POST /hello
+
+
+Let's go back to our "server.js" file and update the GET endpoint & add an endpoint for a POST request by using the "post()" method and simple response message.
+
+[back-end/src/server.js]
+  ...
+  app.get('/hello', (req, res)=>{
+    res.send('Hello from a GET endpoint!');
+  });
+
+  app.post('/hello', (req, res)=>{
+    res.send('Hello from a POST endpoint!');
+  });
+  ...
+
+
+Save the file & restart the server.
+Now in Postman make the same POST request to "http://localhost:8000/hello".
+And if we make a GET request we see our updated endpoint too.
+
+POSTMAN:
+  POST   http://localhost:8000/hello
+  
+  Body Cookies Headers Test Results        200 OK 26ms 232B
+  [Pretty] Raw Preview Visualize HTML
+   1 Hello from a POST endpoint!
+
+
+POSTMAN:
+  GET   http://localhost:8000/hello
+  
+  Body Cookies Headers Test Results        200 OK 26ms 232B
+  [Pretty] Raw Preview Visualize HTML
+   1 Hello from a GET endpoint!
+
+
+
+Before creating more routes lets look at how to send data with our requests. Regardless of whether we are using React or Postman (the client), it helps to know we can send data.
+In Postman you can click on the "body" tab underneath your request, then select "raw" and select "json".
+
+POSTMAN: interface
+
+  GET  http://localhost:8000/hello
+   
+  Params  Authorization  Headers  [Body]  ...
+    none  form-data  x-www-form-urlencoded  [raw]  binary  [JSON]  
+
+    1 {
+    2   "name": "Shaun",   
+    3 }
+
+
+Now before we send this request, go back and modify your POST endoint to use that sent data. The following will not work. An error is displayed saying it cannot find the property "name" on "undefined". So why?
+WARNING: The following will NOT work!
+
+[src/server.js]
+  ...
+  app.post('/hello', (req, res){
+    res.send('Hello, ' + req.body.name + ' from a POST endpoint!');
+  })
+
+
+To make the above endpoint work we need help from some middleware to detect incomming data, parse the JSON, and assign the data to "req.body" for our app to use. The "use()" method is how you specify middleware to your Express app.
+NOTE: The instructor does not go into detail but you can learn more online
+      at the Express API : "express.json": 
+      URL: https://expressjs.com/en/5x/api.html#express.json
+
+
+[src/server.js]
+  import express from 'express';
+
+  const app = express();
+
+  app.use(express.json());
+
+  app.get('/hello', (req, res)=>{
+    res.send('Hello from a GET endpoint!');
+  });
+
+  app.post('/hello', (req, res){
+    res.send('Hello, ' + req.body.name + ' from a POST endpoint!');
+  });
+
+
+So with this update, save the file & restart the server.
+Then open Postman and make a new POST request to our endpoint:
+
+POSTMAN:
+  POST  http://localhost:8000/hello
+
+     [raw]      [JSON]
+  {
+    "name": "Shaun"
+  }
+
+
+  body                                      200 OK 240ms
+  Hello, Shaun from a POST endpoint!
+
+
+If you changed the raw JSON data you are sending it will be reflected. For example if you send {"name":"Bob"} then the response will be "Hello, Bob from a POST endpoint!".
+
+
+
 
 4. Route parameters in Express
 =========================================

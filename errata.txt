@@ -21,3 +21,10 @@ ISSUE: The instructor does not address the '.gitignore" files
  At this point we have a top level directory and subdirectories 'front-end' and 'back-end'. The 'back-end' directory does not have a .gitignore but the top level directory and 'front-end' directory does.
 
 
+Ch 2 Lesson 3 : Testing an Express server with Postman
+-------------------------------------------------------
+ISSUE: The instructor does not go into detail about a POST request or Postman.
+
+It would help if the instructor took a couple minutes to explain middleware such as parsing incoming JSON, explore "express.use()", and do a quick walkthrough of the request and response objects in Express.
+
+
