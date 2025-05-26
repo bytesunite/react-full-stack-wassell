@@ -12,6 +12,12 @@ app.get('/hello', (req, res) => {
   res.send('Hello from a GET endpoint!');
 });
 
+// url parameters
+app.get('/hello/:name', (req, res) => {
+  res.send('Hello ' + req.params.name);
+});
+
+// send data with request
 app.post('/hello', (req, res) => {
   res.send('Hello ' + req.body.name + ' from a Post endpoint!');
 });

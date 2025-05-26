@@ -347,9 +347,38 @@ If you changed the raw JSON data you are sending it will be reflected. For examp
 
 
 
-
 4. Route parameters in Express
 =========================================
+Earlier in the course while learning React we used url/route parameters to gain access to an individual article. Express also allows us to do this.
+So lets start simple with a route such as "/home/Shaun" and see if we can get access to "Shaun".
+
+We can create a new endpoint that will use ":name" to grab the parameter. You don't have to use "name", any identifier will work. So the endpoint will look like '/hello/:name', which tells Express that "name" is a url parameter. The value is made available in the "params" property of the request object.
+
+[src/server.js]
+   ...
+   app.get('/hello',(req,res)=>{
+    res.send('Hello from a GET endpoint!');
+   });
+
+   app.get('/hello/:name', (req, res)=> {
+     res.send('Hello, ' + req.params.name);
+   });
+   ...
+
+
+Then restart your server and use Postman to make a GET request (without sending data), to our new endpoint.
+
+  POSTMAN:
+    GET http://localhost:8000/hello/Shaun
+
+  body                     200 OK 20ms
+  Hello, Shaun
+
+
+Later, the instructor will demonstrate how to restart the server automatically when our source files have been changed.
+Automatically restarting the server saves us time during development. One popular solution is Nodemon but recent versions of Node also added the -watch flag to offer similar functionality.
+
+
 
 5. Upvoting articles
 =========================================
