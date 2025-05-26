@@ -9,3 +9,187 @@ Table of Contents
 5. Upvoting articles
 6. Automatically updating with Nodemon
 7. Adding comments
+
+
+
+
+
+1. Why Node.js?
+=========================================
+Node.js is a free, open-source, cross-platform JavaScript runtime environment that lets developers create servers, web apps, command line tools and scripts. 
+URL: https://nodejs.org
+
+In the past to be a full-stack developer you had to be fluent in more than one programming language. With Node.js you can now write a web application using one single language, JavaScript.
+
+There are many npm libraries available to build Node.js servers. The most popular package is "express" (https://expressjs.com). Express is a fast, unopinionated, minimalist web framework. Express is easy to use and there are many plugins that work with Express, making it a good choice to use as a Node.js webserver.
+
+
+
+2. Setting up an Express server
+=========================================
+Create a new folder named "back-end" next to the existing "front-end" folder within the project directory so we can explore Node.js
+
+  fullstack-react-app/
+    back-end/
+    front-end/
+
+Open the VSCode integrated terminal to the newly created "back-end" folder.
+In order to tell npm we want this to be its own self contained project we can run "npm init" which will intialize a new project, creating a new "package.json" to keep track of the npm packages. 
+NOTE: If you use the '-y' switch with 'npm init' it will automatically accept all the default values rather than prompt you for the project name, etc.
+
+  back-end$ npm init -y
+
+This creates a new "package.json"
+
+  back-end/
+    package.json
+
+
+ATTENTION: (notes outside of instruction)
+The instructor fails to mention setting up a ".gitignore" file. If you don't do this you will see that git has over 600 changes. You don't want to commit the "node_modules" folder, and a few other things. Earlier in the course we created a new React app with Vite. A ".gitignore" file was created similar to the following, which you can use as a template to create a one for "back-end". Here you can see "node_modules" as well as logs, etc.
+
+[front-end/.gitignore]
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+  
+-- end ATTENTION --
+
+
+Express is NOT built into Node.js. Next, we need to install the "express" npm package. Express is NOT built into Node.js.
+
+  back-end$ npm install express
+
+With Express installed, lets setup a directory structure to help organize our code. Create a new folder "src" and within it create a new file "server.js".
+
+  back-end/
+    src/
+      server.js
+    package.json
+
+ATTENTION (my own notes outside instruction)
+URL: https://nodejs.org/api/modules.html
+By default Node.js uses the "CommonJS" module system which uses "require()" to import modules, rather than "import".
+
+   require('express');
+
+Node.js recently started accepting ECMAScript modules that use "import" but you need to configure it.
+
+    import express from 'express';
+
+To configure Node to use "import" you can save files with a ".cjs" extension, or you can modify the 'package.json' by modifying the "type" property to say "module" instead of "commonjs".
+-- end ATTENTION --
+
+
+
+
+The "server.js" file will
+- import the Express package
+  WARNING: By default Node.js uses "require()" by default instead of "import".
+- create a new instance of Express
+- use the "get()" method to create an "endpoint",
+  ('/hello'), which specifies a path
+  to send a request to and a response is returned
+- use the "listen()" method to tell express to
+  specify a port to listen for requests and starts
+  the server.
+
+The get() method accepts 2 arguments
+- an endpoint/path 
+- a function with 2 arguments (request & response).
+
+The send() method of the "response object" allows you
+to send data back to the source of the request.
+
+The listen() method accepts 2 arguments, and starts the server.
+- the port number to listen for request on
+- a function to call once the server is successfully running
+
+
+NOTE: Instructor uses ECMA Script module syntax (import)
+  If you get an error you can use Node.js Common JS
+  SYNTAX: const express = require('express');
+
+[server.js]
+
+    import express from 'express';
+
+    const app = express();
+
+    app.get('/hello', (req,res)=>{
+      res.send('Hello!');
+    });
+
+    app.listen(8000, ()=> {
+      console.log('Server is listening on port 8000');
+    })
+
+
+
+So lets start this server by running the Node app and opening a web browser to "http://localhost:8000/hello".
+
+    back-end$ node src/server.js
+     (node:10148) Warning to load an ES Module, set "type": "module"
+     in the package.json or use the .mjs extension.
+     import express from 'express'
+     ^^^^^^
+
+This throws an error, telling us it does not understand the "import" syntax.
+The instructor shows us how to modify the "package,json" file to update (or add)the "type" property with the value "module".
+
+[package.json]
+   ...
+   type: 'module',
+   ...
+
+
+Once this change is made we can re-run our script and it should start the server.
+
+    back-end$ node src/server.js
+      Server is listening on port 8000
+
+
+BROWSER: http://localhost:8000/hello
+
+   Hello!
+
+
+
+
+
+3. Testing an Express server with Postman
+=========================================
+
+4. Route parameters in Express
+=========================================
+
+5. Upvoting articles
+=========================================
+
+6. Automatically updating with Nodemon
+=========================================
+
+7. Adding comments
+=========================================

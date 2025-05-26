@@ -1,0 +1,23 @@
+Errata 
+=========
+course: 
+LinkedIn Learning : React: Creating and Hosting a Full-Stack Site
+
+Issues & Suggestions while taking this course include the following:
+
+Ch 1 Lesson 8 : Creating a 404 page
+-------------------------------------
+ISSUE: The instructor does not explain how to handle the browser dev tools error regarding "src/App.jsx" throwing an error due to an undefined article.
+
+The instructor introduces "errorElement" into the routes within "src/App.jsx". The instructor points out that the error in "src/pages/ArticlePage.jsx" will force React Router to display the "PageNotFound" component to render. This indeed happens.
+However, the instructor does not address the error in the console from the ArticlePage component and how to best resolve this error.
+
+
+Ch 2 Lesson 2 : Setting up an Express server
+---------------------------------------------
+ISSUE: The instructor does not address the '.gitignore" files 
+
+ It would help if the instructor would help describe how to manage multiple ".gitignore" files within a project. This could prevent accidentally commiting/pushing changes to "node_modules", etc.
+ At this point we have a top level directory and subdirectories 'front-end' and 'back-end'. The 'back-end' directory does not have a .gitignore but the top level directory and 'front-end' directory does.
+
+
