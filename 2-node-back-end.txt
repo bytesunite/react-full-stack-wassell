@@ -382,6 +382,48 @@ Automatically restarting the server saves us time during development. One popula
 
 5. Upvoting articles
 =========================================
+Temporarily we will use a JavaScript array of objects to keep track of upvotes for articles. Later, when discussing databases, we will implement this with mongodb.
+We will use Express routes to increment upvotes for a particular article object of the Array.
+
+[src/server.js]
+  import express from 'express';
+
+  const articleInfo = [
+    {name: 'learn-react', upvote: 0},
+    {name: 'learn-node', upvote: 0},
+    {name: 'mongodb', upvote: 0},
+  ];
+
+  const app = express();
+
+  // ... comment out or remove other routes
+
+  app.post('/api/articles/:name/upvote', (req, res)=> {
+    const article = articleInfo.find(a=> a.name === req.params.name);
+    article.upvotes += 1;
+
+    res.send('Success! The article ' + req.params.name + ' now has ' + article.upvotes + ' upvotes!');
+  });
+
+  app.listen(8000, ()=>{
+    console.log('Server is listening on port 8000');
+  });
+
+
+Save the file and restart the server. Then open Postman and make a POST request to the new endpoint.
+NOTE: The array "articleInfo" in "server.js" is recreated every time the
+      server is restarted. The data is lost as soon as the server is restarted. 
+      This is because we are using the Array as in in-memory database.
+      When we learn mongodb this data will persist between restarts.
+
+POSTMAN:
+  POST  http://localhost:8000/api/articles/learn-node/upvote
+
+  body                200 OK
+  Success! The article learn-node now has 1 upvote!
+
+
+
 
 6. Automatically updating with Nodemon
 =========================================
