@@ -376,7 +376,7 @@ Then restart your server and use Postman to make a GET request (without sending 
 
 
 Later, the instructor will demonstrate how to restart the server automatically when our source files have been changed.
-Automatically restarting the server saves us time during development. One popular solution is Nodemon but recent versions of Node also added the -watch flag to offer similar functionality.
+Automatically restarting the server saves us time during development. One popular solution is Nodemon but recent versions of Node also added the --watch flag to offer similar functionality.
 
 
 
@@ -427,6 +427,229 @@ POSTMAN:
 
 6. Automatically updating with Nodemon
 =========================================
+Up to this point we manually have been restarting the server after updates to the code. This can become tedious and there are solutions to this.
+One solution is the npm package "nodemon", which the instructor pronounces as "node demon". Many argue over the correct way to say it.
+
+== MY NOTE == (break from instruction)
+Remy Sharp, the author of nodemon is funny in that he does not provide the answer to thousands of questions on how to pronounce "nodemon". On the nodemon npm page he provides the following:
+
+Pronunciation
+nodemon, is it pronounced: node-mon, no-demon or node-e-mon (like pokémon)?
+
+Well...I've been asked this many times before. I like that I've been asked this before. There's been bets as to which one it actually is.
+
+The answer is simple, but possibly frustrating. I'm not saying (how I pronounce it). It's up to you to call it as you like. All answers are correct :)
+== end MY NOTE ==
+
+
+== MY NOTE == (break from instruction)
+I'm not sure the instructor, Shaun Wassell, has the right answer, but according to the author of nodemon you can choose to pronounce it however you want.
+
+I've always pronounced it "node mon = node monitor". 
+However, it could very well be considered a "daemon" and be called "node daemon", even though this is not mentioned on the npm website for nodemon.
+A "daemon" is a computer program that runs as a background, performing tasks without direct user interaction process.
+You can learn the history of the word "daemon" at Wikipedia. 
+https://en.wikipedia.org/wiki/Daemon_(computing)
+If you are religious, and are worried about the word "demon", Wikipedia states, "Daemon" is actually a much older form of "demon"; daemons have no particular bias towards good or evil, but rather serve to help define a person's character or personality. The ancient Greeks' concept of a "personal daemon" was similar to the modern concept of a "guardian angel"
+== end MY NOTE ==
+
+== MY NOTE == (break from instruction)
+NPM Package nodemon: https://www.npmjs.com/package/nodemon
+Based on how you install nodemon it may or may not be available in your system path. 
+  Option 1: nodemon installed globally
+    INSTALL: npm install -g nodemon
+    USE: nodemon [your node app]
+  Option 2: nodemon installed locally (not available in command line)
+    (instead you will run it as a script with npm)
+    INSTALL: npm install --save-dev nodemon
+    USE: npm start
+== end MY NOTE ==
+
+
+The instructor installs "nodemon" as a development dependency as it will NOT be used in production.
+By installing "nodemon" as a "dev dependency" we will run our server a little differently.
+
+Previously we ran our server with:
+  back-end$ node src/server.js
+
+With nodemon as a dev dependency we run it as:
+  back-end$ npx nodemon src/server.js
+
+Here "npx" is a command you can use to run commandline scripts you installed into your project locally instead of globally.
+
+With "nodemon" installed as a dev dependency let fire it up with npx and try modifying our code.
+
+  back-end$ npx nodemon src/server.js
+  ...
+  [nodemon] starting `node src/server.js`
+  Server is listening on port 8000
+
+
+Go ahead and use Postman to send one or two requests the the recent endpoint we setup.
+
+  POSTMAN:
+    POST http://localhost:8000/api/articles/learn-node/upvotes
+
+    body                200 OK
+    Success! The article learn-node now has 1 upvote!
+
+
+Without stopping the server update "server.js" by replacing the response of "Success!" with "Hooray!":
+
+  ...
+  res.send('Hooray! The article ' ...)
+
+Save the file. You may notice that "nodemon" has automatically restarted our server for us. If you go to your VSCode integrated terminal you will see this.
+
+  VSCODE TERMINAL
+  back-end$ npx nodemon src/server.js
+  ...
+  [nodemon] starting `node src/server.js`
+  Server is listening on port 8000
+  [nodemon] restarting due to changes...
+  [nodemon] starting `node src/server.js`
+  Server is listening on port 8000
+
+This also means if you go back to Postman and make an new request that
+1. The upvotes are reset do to using an Array as an in-memory db
+2. The updated response message returns "Hooray ..." now
+
+  POSTMAN:
+    POST http://localhost:8000/api/articles/learn-node/upvotes
+
+    body                200 OK
+    Hooray! The article learn-node now has 1 upvote!
+
+
+
+Go ahead and change server.js back to what we had before with "Success!...".
+
+Next, instead of remembering "npx nodemon src/server.js", we can create a script to do the same thing by modifying the "package.json" file under the "scripts" property.
+Add a "dev" property under "scripts", and provide a value for the npx command.
+
+[back-end/package.json]
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon src/server.js",
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
+
+
+Save this file. Now what we can do is run our script with "npm".
+This will help us run our server in development mode without the
+hassle of typing out npx, nodemon, the path to our script.
+
+  back-end$ npm run dev
+  [nodemon] starting `node src/server.js`
+  Server is listening on port 8000
+
+
+== MY NOTE ==
+Alternatively, if you don't want to use nodemon, you can use Node's built-in "--watch" flag, which uses a double dash.
+
+  back-end$ node --watch src/server.js
+  Server is listening on port 8000
+
+== end MY NOTE ==
+
+
+
+
 
 7. Adding comments
 =========================================
+With a successful way to increasing upvotes for articles, the next step is to provide a way to add comments to an article.
+
+First, lets decide what the data looks like that we will pass to our endpoint. The comment will have a name of the person making the comment and the text of the comment itself.
+
+    {
+      "postedBy" : "Shaun",
+      "text" : "Awesome article!",
+    }
+
+This is what we will pass as the "body" of a POST request to the endpoint.
+Create a new endpoint to accept this data and update the "article comments" Array for a specify article.
+Instead of responding with text, we will return JSON.
+NOTE: The upvote endpoint will also be updated to return JSON rather than text.
+
+[src/server.js]
+    ...
+    const articleInfo = [
+      { name: 'learn-react', upvotes: 0, comments: [] },
+      { name: 'mongodb', upvotes: 0, comments: [] },
+      { name: 'learn-node', upvotes: 0, comments: [] },
+    ]; 
+
+    app.post('api/articles/:name/upvote', (req, res)=> {
+      const article = articleInfo.find(a => a.name == req.params.name);
+      article.upvotes += 1;
+
+      res.json(article);
+    });
+
+    app.post('/api/articles/:name/comments', (req, res)=> {
+      const { name } = req.params;
+      const { postedBy, text} = req.body;
+
+      const article = articleInfo.find(a => a.name === name);
+
+      article.comments.push({ postedBy, text});
+
+      res.json(article);
+    });
+
+  
+With these updates lets test out the new endpoint to add comments and the updated endpoint to increment upvotes.
+
+
+  POSTMAN:
+    POST http://localhost:8000/api/articles/learn-node/comments
+
+    raw JSON
+    {
+      "postedBy" : "Shaun",
+      "text" : "Awesome article!"
+    }
+
+    body                200 OK
+    { 
+      name: "learn-node", 
+      upvotes: 0, 
+      comments: [
+        {postedBy: "Shaun", text: "Awesome article!"}
+      ]
+    }
+
+
+  POSTMAN:
+    POST http://localhost:8000/api/articles/learn-node/upvotes
+
+    body                200 OK
+    { 
+      name: "learn-node", 
+      upvotes: 1, 
+      comments: [
+        {postedBy: "Shaun", text: "Awesome article!"}
+      ]
+    }
+
+
+
+Everything seems to be working.
+We now have a way to upvote articles and add comments to articles.
+
+However, at this point restarting the server will lose all the data.
+To persist data we will look at how to use a database, mongodb, in the next chapter.
+
