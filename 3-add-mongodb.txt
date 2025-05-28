@@ -84,6 +84,7 @@ Mac:
      To "tap" mongodb:
      $ brew tap mongodb/brew
 
+     To list/see the current taps:
      $ brew tap
      mongodb/brew
 
@@ -94,6 +95,10 @@ Mac:
      Already up-to-date
 
   3. Install mongodb
+     NOTE: On a Mac with Apple Processor the install creates directories:
+     * /opt/homebrew/etc/mongod.conf
+     * /opt/homebrew/var/log/mongodb
+     * /opt/homebrew/var/mongodb
 
      $ brew install mongodb-community@8.0
      => Fetching dependencies...
@@ -101,19 +106,137 @@ Mac:
      To start mongodb/brew/mongodb-community now and restart at login:
        brew services start mongodb/brew/mongodb-community
 
-If all went well you can check the version of "mongod" the mongodb daemon.
+  4. To see where mongodb was installed you can type the following.
+     
+     $ brew --prefix
 
-    $ mongod --version
-    db version v8.0.9
+  5. To see which brew services are running:
+
+    $ brew services list
+
+If you installed MongoDb on Mac with Homebrew, starting the MongoDB daemon is different than the instructor's video. The instructor starts the MongoDB daemon with "mongod". Sadly this does not work on Mac!
+Instead, you type some long ugly command to start it:
+
+  $ brew services start mongodb/brew/mongodb-community
+
+To stop it you type a similar long ugly command:
+
+  $ brew services stop mongodb/brew/mongodb-community
+
+
+Also, if you installed MongoDB on Mac with Homebrew, the "mongo" command doesn't work either. Instead, you use "mongosh".
+
+Now lets start up the MongoDB daemon and use the mongo shell to create a new database (on a Mac computer).
+
+1. In the VSCode integrated terminal start the mongodb daemon.
+   This will run the daemon in the background.
+
+  TERMINAL:
+
+    back-end$ brew services start mongodb/brew/mongodb-community
+    => Successfully started mongodb-community
+
+    back-end$ brew services list
+    NAME               STATUS   USER    FILE
+    mongodb-community  started  shaun   ~/Lib...
+
+2. Start up the MongoDB shell
+
+    back-end$ mongosh
+    test> 
+
+3. Select/create a new database with the "use" command. 
+   This command is followed by a name, "full-stack-react-db".
+   This name is what we use in our app to access this database.
+
+    TERMINAL:
+
+     back-end$ mongosh
+     Connecting to: mongodb://127.0.0.1:27017/?directConnection=true...
+     ...
+     > use full-stack-react-db
+     switched to db full-stack-react-db
+
+4. MongoDB uses the idea of "collections of documents".
+   DOCS: https://www.mongodb.com/docs/manual/core/databases-and-collections/
+   
+   Data is stored as "documents", which are gathered together in "collections".
+   In MongoDB, databases hold one or more collections of documents.
+   If you are familiar with a relational db, collections = tables.
+   In other words it is a collection of similar items.
+   
+   Using the MongoDB Shell, create a new "collection" named "articles", and insert multiple documents. In our case we will copy and paste the "articleInfo" Array from "src/server.js" into the "insertMany" method.
+   The response (if successful) will be "acknowledged: true".
+  
+   
+    TERMINAL:
+
+     > use full-stack-react-db
+     switched to db full-stack-react-db
+     > db.articles.insertMany([
+         { name: 'learn-react', upvotes: 0, comments: [] },
+         { name: 'mongodb', upvotes: 0, comments: [] },
+         { name: 'learn-node', upvotes: 0, comments: [] },
+     ])
+
+     {
+         "acknowledged" : true,
+         "insertedIds" : [
+            ObjectId("6..."),
+            ObjectId("6..."),
+            ObjectId("6...")
+         ]
+     }
+     >
+
+
+If all went well you will see "acknowledged : true", which tells you that the JavaScript objects were inserted into the database.
+You can verify this by looking at the "articles" collection for the selected database using an empty pair of curly braces {} meant to show all documents:
+
+  $ db.articles.find({})
+
+  // Or a pretty display
+  $ db.articles.find({}).pretty()
+
+
+Before moving on lets learn about a couple more commands.
+The "findOne" command is used to find a single document.
+The {} passed to the command is used as a filter to find a specific document.
+
+For example if we wanted to find a document with a "name" of "learn-react":
+
+  TERMINAL 2:
+    ...
+    > db.findOne({name: "learn-node"})
+
+    {
+      "_id" : ObjectId("6..."),
+      "name" : "learn-node",
+      "upvotes" : 0,
+      "comments" : [],
+    }
+
+
+Another example is if we wanted to find all articles with "upvotes" of 0.
+You would use the "find()" command and a filter of {upvotes: 0}
+
+  TERMINAL 2:
+    ...
+    > db.find({upvotes : 0})
+
+    {
+      "_id" : ObjectId("6..."), "name" : "learn-react", "upvotes" : 0, "comments" : [],
+      "_id" : ObjectId("6..."), "name" : "learn-node", "upvotes" : 0, "comments" : [],
+      "_id" : ObjectId("6..."), "name" : "mongodb", "upvotes" : 0, "comments" : [],
+    }
 
 
 
+NOTE: You can quit the MongoDB Shell "mongosh" with the commands (quit, exit) or by typing CTRL+C twice.
+NOTE: To stop the mongoDB service on Mac (Homebrew install) you can type:
+      $ brew services stop mongodb/brew/mongodb-community
 
-
-
-
-
-
+      
 
 
 
