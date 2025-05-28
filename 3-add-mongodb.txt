@@ -7,3 +7,120 @@ Table of Contents
 3. Adding MongoDB to Express
 4. Rewriting the upvote endpoint
 5. Rewriting the comments endpoint
+
+
+
+
+1. Why MongoDB?
+======================================
+Up to this point we have used a JavaScript array to represent an in-memory database. The problem is this data does not persist when the server is restarted.
+
+To make data persist between server restarts is to use a database. One database that works well with JavaScript is "mongodb".
+
+Mongodb is known as a "non-relational" database. It stores JSON-like data.
+URL: https://www.mongodb.com
+
+  * non-relational
+  * no need to learn SQL
+  * open-source and easy to use
+
+This is different from a a traditional "relational" database where you would define fields ahead of time. A relational database also requires you to know how to use SQL syntax to create, read, update, and delete data.
+
+
+
+2. Downloading and installing MongoDB
+======================================
+There a multiple ways to install MongoDB based on the operating system you are using. 
+
+  * Mongodb community edition - installs locally on your computer/server
+  * Mongodb Atlas - requires an account and is a cloud based service
+  
+The instructor provides a link in the video for installing "community edition" BUG: Instructor provides a link to version 6.0 (but he installs version 7.0).
+
+MY NOTE: As of May 2025 community version 8.0 is (current)
+  The instructor suggests installing 7.0 to help prevent errors in the course.
+  Feel free to use whatever version you want to.
+
+You can use the following updated links to download community edition:
+
+  https://www.mongodb.com/docs/manual/administration/install-community/#std-label-install-mdb-community-edition
+
+  https://mongodb.com/products/self-managed/community-edition
+
+
+Go ahead and attempt to install community edition on your computer system.
+
+Mac: 
+  prerequisites:
+    * xcode command-line tools
+      To check to see if you have this installed, open a terminal
+      and check the version:
+       
+      $ xcode-select -v
+      xcode-select version 2409
+
+      If this command fails, you can install xcode cmd-line tools at the
+      terminal or you can install xcode from the app store:
+
+      $ xcode-select --install 
+    
+    * Homebrew
+      Install instructions: https://brew.sh/#install
+      To check if Homebrew is installed:
+
+      $ brew -v
+      Homebrew 4.5.2
+    
+  Once the prerequisites are met you can continue with installing mongodb.
+
+  1. In the Mac OS terminal use the following command 
+     Note the "tap" command allows Homebrew add third-party repositories
+     to Homebrew, allowing you to install additional software packages
+     from those repositories.
+
+     To list/see you current taps:
+     $ brew tap
+
+     To "tap" mongodb:
+     $ brew tap mongodb/brew
+
+     $ brew tap
+     mongodb/brew
+
+  2. Update Homebrew
+
+     $ brew update
+     => updating Homebrew...
+     Already up-to-date
+
+  3. Install mongodb
+
+     $ brew install mongodb-community@8.0
+     => Fetching dependencies...
+     => Installing mongodb/brew/mongodb-community
+     To start mongodb/brew/mongodb-community now and restart at login:
+       brew services start mongodb/brew/mongodb-community
+
+If all went well you can check the version of "mongod" the mongodb daemon.
+
+    $ mongod --version
+    db version v8.0.9
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. Adding MongoDB to Express
+======================================
+4. Rewriting the upvote endpoint
+======================================
+5. Rewriting the comments endpoint
+======================================
