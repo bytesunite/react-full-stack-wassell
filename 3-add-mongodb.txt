@@ -410,3 +410,95 @@ POSTMAN:
 
 5. Rewriting the comments endpoint
 ======================================
+The comments enpoint is a POST request that accepts a body.
+The body sends json {"postedBy": "name of person", "text" : "the comment"}.
+Within the handler this is gathered via the "body" of the request object.
+The url parameter "name" is used to match a specific article.
+
+MongoDB uses "findOneAndUpdate" to find and update a single document.
+You can also determine if it returns the document before or after the changes.
+The "returnDocument" property is used to specify "before" or "after" changes.
+
+  db.collection('articles').findOneAndUpdate({name: 'learn-node'},
+    {
+      $push: {
+        "comments" : {
+          postedBy: 'Shuan',
+          text: 'Excellent article!',
+        }
+      }
+    },
+    {
+      returnDocument: "after",
+    }
+  );
+
+MongoDB has special syntax to push the new object onto the "comments" array.
+The "$push" property accepts an object with the property to update (comments),
+and the value to push onto the array.
+
+  $push : { "comments" : {
+    postedBy : "name",
+    text: "text"
+  }}
+
+
+When we combine this all together we get the following:
+
+[server.js]
+    app.post('/api/articles/:name/comments', async (req, res) => {
+      const { name } = req.params;
+      const { postedBy, text } = req.body;
+      const newComment = {postedBy, text}
+
+      // to be updated to use mongodb
+      const updatedArticle = await db.collection('articles').findOneAndUpdate(
+        { name },
+        { $push: { comments: newComment }},
+        { returnDocument: 'after'}
+      );
+    
+      res.json(updatedArticle);
+    });
+
+
+To test it, start up Mongod and the server if they are not running.
+Then go to POSTMAN and make a POST request with a url parameter such as "learn-react" & provide a body with the commentor name and text.
+
+  POSTMAN
+    POST:    http://localhost:8000/api/articles/learn-react/comments
+
+    request body (raw/json): { "postedBy" : "Shaun", "text" : "Great article!" }
+
+    body
+    {
+      "_id" : "6...",
+      "name" : "learn-react",
+      "upvotes" : 0,
+      "comments" : [{"PostedBy": "Shaun", "text": "Great article!"}]
+    }
+
+
+
+
+If all went well, we can now remove the "articleInfo" array we were using as an in-memory database.
+MongoDB now persists data and is the database for our app.
+
+[server.js]
+
+  ...
+  // delete this
+  const articleInfo = [
+    { name: 'learn-react', upvotes: 0, comments: [] },
+    { name: 'mongodb', upvotes: 0, comments: [] },
+      { name: 'learn-node', upvotes: 0, comments: [] },
+  ];
+
+
+
+Finally, if you notice your app made a mistake and inserted incorrect data before you could fix the code in Server.js, don't forget you can use MongoDB shell "mongo OR mongosh" to interact with the "full-stack-react-db" to update/add/delete content from the database as needed. 
+
+For example, if you accidentally added a comment to an article with the wrong info, you can "pop" off the bad item using the MongoDB shell with help of the $pop command.
+The MongoDB documentation can help guide you to find the document (article) and modify it. For example there is a "$pop" property that will remove an item from the front or end of the array which you could use to modify the "comments" array in an article.
+
+URL: https://www.mongodb.com/docs/manual/

@@ -1,14 +1,9 @@
 // ECMA Script Modules
 import express from 'express';
 import { MongoClient, ServerApiVersion } from 'mongodb';
+
 // Node.js CommonJS modules
 // const express = require('express');
-
-const articleInfo = [
-  { name: 'learn-react', upvotes: 0, comments: [] },
-  { name: 'mongodb', upvotes: 0, comments: [] },
-  { name: 'learn-node', upvotes: 0, comments: [] },
-];
 
 const app = express();
 
@@ -55,10 +50,17 @@ app.post('/api/articles/:name/upvote', async (req, res) => {
 app.post('/api/articles/:name/comments', async (req, res) => {
   const { name } = req.params;
   const { postedBy, text } = req.body;
+  const newComment = { postedBy, text };
 
-  // to be updated to use mongodb
+  const updatedArticle = await db.collection('articles').findOneAndUpdate(
+    { name },
+    { $push: { comments: newComment } },
+    {
+      returnDocument: 'after',
+    }
+  );
 
-  res.json(article);
+  res.json(updatedArticle);
 });
 
 /*
