@@ -1,0 +1,63 @@
+NOTES:
+======================
+
+
+1. Starting MongoDB
+   On Mac with brew, it sucks starting & stopping mongodb
+
+     $ brew services start mongodb/brew/mongodb-community
+
+     $ brew services stop mongodb/brew/mongodb-community
+
+
+2. Starting Express server a few ways:
+   A. You can use Node's built-in "--watch" flag
+
+    back-end$ node --watch src/server.js
+
+    OR
+   
+    [package.json]
+      {
+      ...
+        scripts: {
+          dev: 'node --watch src/server'
+        }
+      ...
+      }
+
+     back-end$ npm run dev
+
+  
+  C. You can install the nodemon npm package (locally or globally)
+
+     (Globally)
+     back-end$ npm install -g nodemon
+     back-end$ nodemon src/server.js
+
+     [package.json] 
+       {
+        scripts: {
+          dev: 'nodemon src/server.js'
+        }
+       }
+
+     back-end$ npm run dev
+
+
+     (Locally)
+     npm install --save-dev nodemon
+
+     back-end: npx nodemon src/server.js
+
+     [package.json]
+       {
+        scripts: {
+          dev: 'npx nodemon src/server.js'
+        }
+       }
+
+    back-end: npm run dev
+
+
+     
