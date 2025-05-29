@@ -325,10 +325,88 @@ After all that, lets test it out
 If all went well you will see a single JSON object matching the url parameter name.
 In this case we used "learn-node" to match the document in "articles" collection from the mongo database.
 
-The next step will be to update our existing endpoints, then delete the "articleInfo" Array we used as an in-memory db.
+The next step will be to update and refactor our existing endpoints, then delete the "articleInfo" Array we used as an in-memory db.
 
 
 4. Rewriting the upvote endpoint
 ======================================
+Before updating the endpoints it would help to refactor the app.
+Rather than cut & paste the Mongodb connection code into each endpoint, let move it outside the endpoints.
+
+First, create a variable to store the mongo database.
+
+  ...
+  let db;
+  ...
+
+Then create a function that will connect to the mongodb database and assign it to the "db" variable.
+
+    async function connectToDb(){
+      const uri = "mongodb://127.0.0.1:27017";
+      const client = new MongoClient(uri, {
+        serverApi: {
+          version: ServerApiVersion.v1,
+          strict: true,
+          deprecationErrors: true,
+        }
+      });
+
+      await client.connect();
+
+      db = client.db('full-stack-react-db');
+    }
+
+
+We will want to invoke this function when our Express server starts so the next step is to create a function to start both the connection to MongoDB and to start the Express server.
+
+    ...
+    async function start(){
+      await connectToDb();
+      app.listen(8000, ()=>{
+        console.log('Server is listening on port 8000');
+      })
+    }
+
+    start();
+
+
+
+Now we can rewrite the endpoint for incrementing the upvote for an article.
+We will grab the name from the url params to find and update the "upvote" property.
+MongoDB has special syntax to increment values. It also has special sytnax to find & update.
+Finally you can specify if the value returned is before or after the update.
+Async/await is needed to access/update the mongodb database.
+
+...
+  app.post('/api/articles/:name/upvote', async (req, res)=>{
+    const { name } = req.params;
+    const updatedArticle = await db.collection('articles').findOneAndUpdate({name}, {
+      $inc : {upvotes : 1}
+    },
+    {
+      returnDocument : "after",
+    });
+
+    res.json(updatedArticle);
+  });
+
+
+After all the special MongoDB syntax, test your updates to see if you can increment an article upvote.
+REMINDER: This is a POST request for this endpoint. Attempting a GET request will fail.
+
+POSTMAN:
+  POST   http://localhost:8000/api/articles/mongodb/upvote
+
+  body      200 OK
+  {
+    "_id" : "6...",
+    "name" : "mongodb",
+    "upvotes" : 1,
+    "comments" : [],
+  }
+
+
+
+
 5. Rewriting the comments endpoint
 ======================================

@@ -14,11 +14,10 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/api/articles/:name', async (req, res) => {
-  const { name } = req.params;
+let db;
 
+async function connectToDb() {
   const uri = 'mongodb://127.0.0.1:27017';
-
   const client = new MongoClient(uri, {
     serverApi: {
       version: ServerApiVersion.v1,
@@ -29,26 +28,35 @@ app.get('/api/articles/:name', async (req, res) => {
 
   await client.connect();
 
-  const db = client.db('full-stack-react-db');
+  db = client.db('full-stack-react-db');
+}
 
+app.get('/api/articles/:name', async (req, res) => {
+  const { name } = req.params;
   const article = await db.collection('articles').findOne({ name });
-
   res.json(article);
 });
 
-app.post('/api/articles/:name/upvote', (req, res) => {
-  const article = articleInfo.find((a) => a.name === req.params.name);
-  article.upvotes += 1;
-
-  res.send(article);
+app.post('/api/articles/:name/upvote', async (req, res) => {
+  const { name } = req.params;
+  // return object after update
+  const updatedArticle = await db.collection('articles').findOneAndUpdate(
+    { name },
+    {
+      $inc: { upvotes: 1 },
+    },
+    {
+      returnDocument: 'after',
+    }
+  );
+  res.json(updatedArticle);
 });
 
-app.post('/api/articles/:name/comments', (req, res) => {
+app.post('/api/articles/:name/comments', async (req, res) => {
   const { name } = req.params;
   const { postedBy, text } = req.body;
 
-  const article = articleInfo.find((a) => a.name === name);
-  article.comments.push({ postedBy, text });
+  // to be updated to use mongodb
 
   res.json(article);
 });
@@ -69,6 +77,11 @@ app.post('/hello', (req, res) => {
 });
 */
 
-app.listen(8000, () => {
-  console.log('Server is listening on port 8000');
-});
+async function start() {
+  await connectToDb();
+  app.listen(8000, () => {
+    console.log('Server is listening on port 8000');
+  });
+}
+
+start();
