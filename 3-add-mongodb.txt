@@ -191,19 +191,20 @@ Now lets start up the MongoDB daemon and use the mongo shell to create a new dat
 
 
 If all went well you will see "acknowledged : true", which tells you that the JavaScript objects were inserted into the database.
-You can verify this by looking at the "articles" collection for the selected database using an empty pair of curly braces {} meant to show all documents:
+You can verify this by finding all documents in the "articles" collection using the "find()" command.
+Providing an empty pair of curly braces {} will return all documents:
 
-  $ db.articles.find({})
+  > db.articles.find({})
 
   // Or a pretty display
-  $ db.articles.find({}).pretty()
+  > db.articles.find({}).pretty()
 
 
 Before moving on lets learn about a couple more commands.
 The "findOne" command is used to find a single document.
 The {} passed to the command is used as a filter to find a specific document.
 
-For example if we wanted to find a document with a "name" of "learn-react":
+For example if we wanted to find a document with a "name" of "learn-node":
 
   TERMINAL 2:
     ...
@@ -239,10 +240,94 @@ NOTE: To stop the mongoDB service on Mac (Homebrew install) you can type:
       
 
 
-
-
 3. Adding MongoDB to Express
 ======================================
+To be able to interact with mongo db from within the node server, install the "mongodb" npm package.
+
+  back-end$ npm install mongodb
+
+
+First, lets import "MongoClient" & "ServerApiVersion" from the newly installed "mongodb" package;
+
+[src/server.js]
+  import express from 'express';
+  import { MongoClient, ServerApiVersion } from 'mongodb';
+  ...
+
+
+Next, lets setup a new endpoint in our express server to display a single article.
+We will get the "name" of the article from the request params.
+Then we will attempt to connect to the Mongo database from our server rather than the terminal.
+
+The uri depends on if you are connecting locally or through something like CodeSpaces.
+If you installed Mongodb locally the address was displayed to you when you started up mongod (or brew service).
+By default Mongodb uses a localhost address with a specific port. 
+You might remember seeing, "Connecting to: mongodb://127.0.0.1:27017..." which tells us it is running on port "27017".
+
+Pay attention to the fact we made the GET an "async" request.
+In the body we use "await" to handle the response from connecting to the database.
+
+[src/server.js]
+  ...
+
+  app.get('/api/articles/:name', async (req, res)=>{
+    const { name } = req.params;
+
+    const uri = "mongodb://127.0.0.1:21700";
+
+    const client = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
+    
+    await client.connect();
+
+    const db = client.db('full-stack-react-db')
+
+    const article = await db.collection('articles').findOne({name});
+
+    res.json(article);
+  });
+
+
+
+OK. That is a lot to wire up.
+1. import MongoClient & ServerApiVersion from "mongodb"
+2. create an "async" request
+3. grab the name from the url parameters
+4. specify the uri for the mongodb server "mongodb://127.0.0.1:27017"
+4. create a new MongoClient, passing the uri and a settings object
+5. "await" the client connection to the database "await client.connect()"
+6. select the database via the MongoClient "const db = client.db('full-stack-react-db')"
+7. search for a mongodb document that matches the url parameter name
+   "const article = db.collection('articles').findOne({name})"
+
+
+After all that, lets test it out 
+1. start up mongod (or brew service) if its not still running.
+2. start the node server
+3. open up Postman and make a request to the new endpoint to try it out.
+
+  POSTMAN:
+    GET    http://localhost:8000/api/articles/learn-node
+
+  body      200 OK
+  {
+    "_id": "6...",
+    "name": "learn-node",
+    "upvotes": 0,
+    "comments": [],
+  }
+
+If all went well you will see a single JSON object matching the url parameter name.
+In this case we used "learn-node" to match the document in "articles" collection from the mongo database.
+
+The next step will be to update our existing endpoints, then delete the "articleInfo" Array we used as an in-memory db.
+
+
 4. Rewriting the upvote endpoint
 ======================================
 5. Rewriting the comments endpoint

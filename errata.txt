@@ -28,3 +28,10 @@ ISSUE: The instructor does not go into detail about a POST request or Postman.
 It would help if the instructor took a couple minutes to explain middleware such as parsing incoming JSON, explore "express.use()", and do a quick walkthrough of the request and response objects in Express.
 
 
+Ch 3 Lesson 2 : Downloading and installing MongoDB
+-----------------------------------------------------
+ISSUE: The installation is frustrating and doesn't match instructor videos
+
+Installing MongoDB Community Edition on Mac with Homebrew is a pain.
+The biggest frustration is the course instruction uses commands "mongod" and "mongo", but Mac with Homebrew uses commands "brew service start" and "mongosh". The long ugly "brew service start" on Mac is a ugly at best. Sadly I miss Windows when Apple installs are ugly and frustrating like this.
+
