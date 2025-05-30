@@ -9,3 +9,38 @@ Table of Contents
 5. Displaying comments
 6. Creating an upvote button
 7. Creating an add comment form
+
+
+
+
+
+1. The Axios library
+========================================
+At this point in the course we have a working front-end using React and React Router, and a working back-end with Node, Express and MongoDB.
+
+Now it is time to learn how to connect the front-end and back-end together.
+
+There are various ways to load data from the back-end into the React front-end. 
+The instructor introduces a popular framework, called "Axios", for aiding in loading backend data into React.
+This npm package will help us make network requests.
+URL: https://www.npmjs.com/package/axios
+
+You will install Axios in the "front-end" directory from a previous chapter.
+
+  front-end$ npm install axios
+
+
+
+
+2. Loading data for React Router routes
+========================================
+3. Using the useLoaderData hook
+========================================
+4. Using route parameters in loaders
+========================================
+5. Displaying comments
+========================================
+6. Creating an upvote button
+========================================
+7. Creating an add comment form
+========================================
