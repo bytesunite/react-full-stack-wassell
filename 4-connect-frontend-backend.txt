@@ -34,8 +34,156 @@ You will install Axios in the "front-end" directory from a previous chapter.
 
 2. Loading data for React Router routes
 ========================================
+Open "front-end/src/App.jsx" and refresh you memory. We created individual routes that will render a component based on the url we type in the browser. We had (home page, about page, articles page, and individual article page).
+
+In our routes we can specify a "loader" property that accepts an asynchronous function.
+The way a loader works is it will load whatever data this component needs from the server.
+
+We will use Axios, so the first step is to import it.
+
+[src/App.jsx]
+  ...
+  import axios from 'axios';
+
+
+With Axios imported, we make a call to "axios.get()" to make a GET request with a url string argument.
+This get request is made within a function assigned to the "loader" property for a route.
+We will first try this out to request the 'learn-node' article which returns an object with the "upvotes" & "comments" properties. We will destructure this from the response, then return an object with this data.
+Once we finish with updating our router in App.jsx, we will learn about a React hook to access the returned object.
+
+To prevent a CORS error, we will need to get our app to think the PORT is the same for the front-end and back-end.
+
+
+[src/App.jsx]
+  ...
+
+  const routes = [
+    {
+      path: '/',
+      element: <Layout />
+      errorElement: <NotFoundPage />,
+      children: [
+        {
+          path: '/',
+          element: <HomePage />
+        },
+        ...
+        {
+          path: '/articles/:name',
+          element: <ArticlePage />,
+          loader: async function(){
+            const response = await axios.get('/api/articles/learn-node');
+            const {upvotes, comments} = response.data;
+            return {upvotes, comments};
+          }
+        }
+      ]
+    }
+  ]
+
+
+
 3. Using the useLoaderData hook
 ========================================
+The next step is to gain access to the returned object within the component from from the "loader" function.
+This is not done in App.jsx, but instead done inside of the ArticlePage component.
+In addition to the "useParams" hook, we will import the "useLoaderData" hook from "react-router-dom".
+
+Whatever we returned from the "loader" function in App.jsx, is what we get in the ArticlePage component.
+We already know the structure of the object so we can destructure {upvotes, comments} from the data returned by "useLoaderData()"
+
+To try this out lets try displaying the "upvotes" on the page, between the h1 and article.
+
+1. import useLoaderData
+2. call userLoaderData within the component function to gain access to the object returned.
+3. use the returned data in the component
+
+[src/pages/ArticlePage.js]
+
+    import { useParams, useLoaderData } from 'react-router-dom';
+    import articles from '../article-content.js';
+    
+    export default function ArticlePage() {
+      const { name } = useParams();
+      const { upvotes, comments } = useLoaderData;
+
+      const article = articles.find((a) => a.name === name);
+    
+      return (
+        <>
+          <h1>{article.title}</h1>
+          <p>This article has {upvotes} upvotes</p>
+          {article.content.map((p) => (
+            <p key={p}>{p}</p>
+          ))}
+        </>
+      );
+    }
+
+OK, with "App.jsx" updated to use "axios.get" in the the "loader" function,
+and the ArticlePage component updated to accept data with the "useLoaderData()" hook lets move on.
+The instructor did mention we might run into a CORS error!!!
+
+So right now this will not work. It will render the page but the {upvotes} fails.
+To learn more about this, right click on the web page and select "inspect".
+This open up the browser dev tools. Go to the Network tab, then "Fetch/XHR" tab and look at the headers for REQUEST URL for "learn-node". You will see this url is for the "front-end" url (using PORT 5173) rather than our Express server that is using PORT 8000.
+
+If you look in App.jsx you will see we did not specify the full URL:
+
+   axios.get('/api/articles/learn-node') 
+   
+This does not specify a PORT so it automatically uses the one Vite setup for our React project, which is PORT 5173 at localhost.
+
+
+CORS ERROR...
+Simply providing a url with another PORT will fail with a CORS error.
+
+  axios.get('http://localhost:8000/api/articles/learn-node)  // CORS Error (cross origin)
+
+To address this, we have to use what is called a "Proxy" to tell our app all urls are the "same origin".
+Creating a new React project with Vite uses port 5173. But if you go into the "vite.config.js" file we can setup a proxy, by modifying "defineConfig()" by adding
+
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000/',
+        changeOrign: true,
+      }
+    }
+  }
+
+[front-end/vite.config.js]
+    import { defineConfig } from 'vite'
+    import react from '@vitejs/plugin-react'
+    
+    // https://vite.dev/config/
+    export default defineConfig({
+      plugins: [react()],
+      server: {
+        proxy: {
+          '/api': {
+            target: 'http://localhost:8000/',
+            changeOrign: true,
+          }
+        }
+      }
+    })
+
+
+So now it's time to try all of this out.
+1. Start mongod 
+2. Start up your backend Express server
+3. Open another terminal and Start up you React front end with npm run dev.
+4. Open a browser to the articles page (http://localhost:5173/articles) and click on an article.
+
+If all went well Vite will forward the request to port 8000 to connect to our Node server, make the mongodb connection to get the data, then return and render it in the ArticlePage component.
+
+Wow, is your head spinning yet? Laugh.
+Since we hard coded the article name "learn-node" in the axios.get request, the next lesson shows how grab the url parameter to build a dynamic url for the axios request.
+
+
+
+
 4. Using route parameters in loaders
 ========================================
 5. Displaying comments
