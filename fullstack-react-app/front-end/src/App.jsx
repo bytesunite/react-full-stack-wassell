@@ -3,7 +3,7 @@ import './App.css';
 import axios from 'axios';
 import HomePage from './pages/HomePage.jsx';
 import AboutPage from './pages/AboutPage.jsx';
-import ArticlePage from './pages/ArticlePage.jsx';
+import ArticlePage, { loader as articleLoader } from './pages/ArticlePage.jsx';
 import ArticlesListPage from './pages/ArticlesListPage.jsx';
 import PageNotFound from './pages/PageNotFound.jsx';
 import Layout from './Layout.jsx';
@@ -29,11 +29,7 @@ const routes = [
       {
         path: '/articles/:name',
         element: <ArticlePage />,
-        loader: async function () {
-          const response = await axios.get('/api/articles/learn-node');
-          const { upvotes, comments } = response.data;
-          return { upvotes, comments };
-        },
+        loader: articleLoader,
       },
     ],
   },

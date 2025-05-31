@@ -186,6 +186,90 @@ Since we hard coded the article name "learn-node" in the axios.get request, the 
 
 4. Using route parameters in loaders
 ========================================
+Previously we hard coded the article 'learn-node' for the axios.get() request.
+Instead lets learn how to access the article name from the "route parameter".
+If you remember, we used the hook "useParams" to get a url parameter from within a component.
+However, we need to access to this value inside of the "loader" function where we call axios.get()
+
+It is pretty easy. If you specify a parameter to the loader function, these params become available in the function.
+EX: loader: async function({params}{ ... params.name })
+
+[App.jsx]
+   ...
+   const routes = [
+    {
+      path: '/',
+      element: <Layout />,
+      errorElement: <PageNotFound />,
+      children: [
+        ...
+        {
+          path: '/articles/:name',
+          element: <ArticlePage />
+          loader: async function({params}) {
+            const response = await axios.get('/api/articles/' + params.name);
+            const {upvotes, comments} = response.data;
+            return {upvotes, comments};
+          }
+        }
+
+
+NOTE: At this point we are still using a static file for the list of articles instead of mongodb.
+      You can see this in "pages/ArticlesListPage.jsx" which imports "article-content.js".
+
+We will refacter ArticlesListPage & Article components later, but this does not prevent us from making a get() request to our Express server for an individual article in mongodb. When we click on an article it goes to the "articles/:name" route which uses axios.get().
+
+After updating the loader function for route "/articles/:name" to use parameters, go ahead and test it by loading different articles. If all went well it should work as before except now we are connecting to our server (rather than the static file) for individual articles. You can verify the request in the browser dev tools.
+
+  BROWSER: http://localhost:8000/articles/
+    click on article "learn-react"
+
+    Learn React
+    This article has 0 upvotes
+    ...
+  
+  BROWSER DEV TOOLS: (here we can verify a request to our Node server api)
+    Network tab/ 
+      learn-react / headers / Request URL: http:/localhost:5173/api/articles/learn-react
+
+
+To clean up the App.jsx file we can put the "loader" function for the "/articles/:name" route inside of the <ArticlePage> component file.
+
+[pages/ArticlePage.jsx]
+    ...
+    import axios from 'axios';
+    ...
+  
+    export default ArticlePage(){
+      ...
+    }
+  
+    export async function loader({params}) {
+      const response = await axios.get('/api/articles/' + params.name);
+      const { upvotes, comments } = response.data;
+      return { upvotes, comments };
+    }
+
+
+Then we can import this loader function into App.jsx along with the ArticlePage component.
+This puts all the logic for Loading and ArticlePage in the same file, rather than writing the
+component in one file and the loader function in App.jsx.
+
+[App.jsx]
+  ...
+  import ArticlePage, {loader as articleLoader} from './pages/ArticlePage.jsx';
+  ...
+  const routes = [
+    ...
+    children: [
+      ...
+    {
+      path: '/articles/:name',
+      element: <ArticlePage />,
+      loader: articleLoader,
+    }
+
+
 5. Displaying comments
 ========================================
 6. Creating an upvote button
