@@ -1,11 +1,11 @@
 import { useParams, useLoaderData } from 'react-router-dom';
 import articles from '../article-content.js';
 import axios from 'axios';
+import CommentsList from '../CommentsList.jsx';
 
 export default function ArticlePage() {
   const { name } = useParams();
   const { upvotes, comments } = useLoaderData();
-
   const article = articles.find((a) => a.name === name);
 
   return (
@@ -15,6 +15,7 @@ export default function ArticlePage() {
       {article.content.map((p) => (
         <p key={p}>{p}</p>
       ))}
+      <CommentsList comments={comments} />
     </>
   );
 }

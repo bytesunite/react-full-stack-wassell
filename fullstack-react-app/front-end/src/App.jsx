@@ -16,6 +16,7 @@ const routes = [
     children: [
       {
         path: '/',
+
         element: <HomePage />,
       },
       {

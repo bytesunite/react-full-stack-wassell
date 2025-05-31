@@ -272,6 +272,72 @@ component in one file and the loader function in App.jsx.
 
 5. Displaying comments
 ========================================
+This is not comments as in code comments //, but rather the comments people make about an article.
+A new component is created to display article comments.
+
+The idea is to have the ArticlePage, display a list of comments using this component.
+
+[front-end/src/CommentsList.jsx]
+
+    export default function CommentsList({ comments }) {
+      return (
+        <>
+          <h3>Comments:</h3>
+          {comments.map((comment) => {
+            <div key={comment.text}>
+              <h4>{comment.postedBy}</h4>
+              <p>{comment.text}</p>
+            </div>;
+          })}
+        </>
+      );
+    }
+
+
+That is pretty straight forward. So let's move on to see how we will use it.
+Go to the "pages/ArticlePage.jsx" file and import CommentsList, and use it below the list of article paragraphs.
+The prop "comments" for CommentsList will use the data returned by the "useLoader()" hook.
+
+[pages/ArticlePage.jsx]
+  ...
+  import CommentsList from '../CommentsList.jsx';
+  ...
+
+  export default ArticlePage(){
+    const { name } = useParams();
+    const { upvotes, comments } = useLoaderData();
+
+    return (
+      ...
+      {articles.map(p =>{
+        <p key={p}>{p}</p>
+      })}
+      <CommentsList comments={comments} />
+      ...
+    )
+  }
+
+
+Next, we will test this change in the web browser.
+Earlier we made a single comment on the article "learn-react", that we can use to test this.
+
+BROWSER: http://localhost:8000/articles/learn-react
+
+  Learn React
+  
+  article text...
+  more article text...
+  more article text...
+
+  Comments
+  Shaun
+  Great Article!
+
+  
+
+
+
+
 6. Creating an upvote button
 ========================================
 7. Creating an add comment form
