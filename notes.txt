@@ -29,7 +29,7 @@ NOTES:
      back-end$ npm run dev
 
   
-  C. You can install the nodemon npm package (locally or globally)
+  B. You can install the nodemon npm package (locally or globally)
 
      (Globally)
      back-end$ npm install -g nodemon
@@ -60,4 +60,55 @@ NOTES:
     back-end: npm run dev
 
 
-     
+
+
+3. ERROR: No `HydrateFallback` element
+   I made a typo that got me stuck trying to determine what Hydrate and Fallback was.
+   NOTE: This error also came up later in the course when using react-router-dom 7.6.1
+   To troubleshoot I installed/uninstalled versions of 'react-router-dom' new(7.6.1)/old(6.4).
+
+   A typo was eventually discovered, the root of the issue, which was using {} instead of () to wrap jsx.
+   This fix got rid of the hydration Fallback error.
+
+    ERROR:
+    ----------------------------------
+    [src/CommentsList.jsx]
+   
+    export default function CommentsList({ comments }) {
+      return (
+        <>
+          <h3>Comments:</h3>
+          {comments.map((comment) => {    // should be (
+            <div key={comment.text}>
+              <h4>posted by: {comment.postedBy}</h4>
+              <p>{comment.text}</p>
+            </div>
+          })}      // should be ))}
+        </>
+      );
+    }
+
+    CORRECTION:
+    ---------------------------------------
+    The issue was with the map() callback.
+    The syntax to correct this was small but important, wrapping JSX in ()
+
+        ...
+        {comments.map((comment) => (
+            <div key={comment.text}>
+              <h4>posted by: {comment.postedBy}</h4>
+              <p>{comment.text}</p>
+            </div>
+        ))}    
+
+
+4. Attention: The course uses "react-router-dom" version 6.4
+   If you use "react-router-dom" version 7.6.1, you will run into errors in ch4.
+   Using react-router-dom version 7.6.1 presents the following error in the Web Browser Console:
+   
+     "No `HydrateFallback` element provided to render during initial hydration"
+
+   This error is displayed in chapter 4 "creating an upvote button".
+   This error is NOT displayed when using react-router-dom 6.4.
+
+

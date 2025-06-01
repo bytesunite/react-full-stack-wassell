@@ -335,10 +335,60 @@ BROWSER: http://localhost:8000/articles/learn-react
 
   
 
-
-
-
 6. Creating an upvote button
 ========================================
+The next task is to update the UI to include an "upvote" button for a displayed article.
+Clicking this button will make a POST request to the server to update the article "upvote" value.
+
+First, create a <button> element with the text "Upvote", then add a click handler to it.
+
+The handler function will be an "asynchronous function" as we will connect to the server and wait for a response.
+The Axios library will be used to make a POST request to the server with the "axios.post()" method.
+
+In order to use the updated "upvotes" returned by the server in the page we will need React's "useState".
+The "useState()" hook is used to maintain state between React render cycles.
+First, we will rename "upvotes to initialUpvotes" returned by "useLoaderData()".
+Then, we will use this value as the intial value of our "upvotes" state with "useState(initialUpvotes)"
+Then, we can set the state (setUpvotes()) with the response data from axios's POST request.
+
+[pages/ArticlePage.jsx]
+   ...
+   import { useState } from 'react';
+   ...
+
+   export default function ArticlePage(){
+      const { name } = useParams();
+      const { upvotes: initialUpvotes, comments } = useLoaderData();
+      const [upvotes, setUpvotes] = useState(initialUpvotes);
+      const article = articles.find((a) => a.name === name);
+
+    async function onUpvoteClicked(){
+      const response = await axios.post('/api/articles/' + name + '/upvote');
+      const updatedArticleData = response.data;
+      setUpvotes(updatedArticlesData.upvotes);
+    }
+
+    return (
+      <>
+        <h1>{article.title}</h1>
+        <button onClick={onUpvoteClicked}>Upvote</button>
+        <p>This article has {upvotes} upvotes</p>
+        {article.content.map((p) => (
+          <p key={p}>{p}</p>
+        ))}
+        <CommentsList comments={comments} />
+      </>
+
+
+
+So let's give that a try by starting up mongodb/node server/react.
+On an article page click on "Upvote" to see if the request to the server updates upvotes.
+If all went well you should see the "upvote" count on the page increment.
+You can verify this updated the mongodb record by refreshing the page or navigating away and back again.
+The "upvote" value has persisted.
+
+
+
+
 7. Creating an add comment form
 ========================================
